@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.zhiyou.wxgame.system.dao.UserDao">
+
+	<select id="get" resultType="com.zhiyou.wxgame.dto.system.UserDto">
+		<![CDATA[
+			SELECT
+				a.userId,
+				a.username,
+				a.`name`,
+				a.`password`,
+				a.`status`,
+				a.createTime,
+				a.modifiedTime
+			FROM
+				sys_user AS a
+			WHERE
+				a.userId = #{userId}
+		]]>
+	</select>
+
+	<select id="list" resultType="com.zhiyou.wxgame.dto.system.UserDto">
+		<![CDATA[
+			SELECT
+				a.userId,
+				a.username,
+				a.`name`,
+				a.`password`,
+				a.`status`,
+				a.createTime,
+				a.modifiedTime
+			FROM
+				sys_user AS a
+		]]>
+        <where>  
+	  		<if test="userId != null and userId != ''"> and a.userId = #{userId} </if>
+  		  	<if test="username != null and username != ''"> and a.username = #{username} </if>
+  		  	<if test="name != null and name != ''"> and a.name = #{name} </if>
+  		</where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+			<otherwise>
+                order by a.userId desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="count" resultType="int">
+		<![CDATA[
+			SELECT
+				COUNT(*)
+			FROM
+				sys_user AS a
+		]]>
+		<where>  
+	  		<if test="userId != null and userId != ''"> and a.userId = #{userId} </if>
+  		  	<if test="username != null and username != ''"> and a.username = #{username} </if>
+  		  	<if test="name != null and name != ''"> and a.name = #{name} </if>
+  		  	<if test="password != null and password != ''"> and a.password = #{password} </if>
+  		  	<if test="createTime != null and createTime != ''"> and a.createTime = #{createTime} </if>
+  		  	<if test="modifiedTime != null and modifiedTime != ''"> and a.modifiedTime = #{modifiedTime} </if>
+  		</where>
+	</select>
+	 
+	<insert id="save" parameterType="com.zhiyou.wxgame.dto.system.UserDto" useGeneratedKeys="true" keyProperty="userId">
+		<![CDATA[
+			INSERT INTO sys_user(
+				`username`, 
+				`name`, 
+				`password`, 
+				`status`, 
+				`createTime`, 
+				`modifiedTime`
+			)VALUES(
+				#{username}, 
+				#{name}, 
+				#{password}, 
+				#{status}, 
+				#{createTime}, 
+				#{modifiedTime}
+			)
+		]]>
+	</insert>
+	 
+	<update id="update" parameterType="com.zhiyou.wxgame.dto.system.UserDto">
+		<![CDATA[
+			UPDATE sys_user 
+		]]>
+		<set>
+			<if test="username != null">`username` = #{username}, </if>
+			<if test="name != null">`name` = #{name}, </if>
+			<if test="password != null">`password` = #{password}, </if>
+			<if test="status != null">`status` = #{status}, </if>
+			<if test="createTime != null">`createTime` = #{createTime}, </if>
+			<if test="modifiedTime != null">`modifiedTime` = #{modifiedTime} </if>
+		</set>
+		<where>
+			<![CDATA[userId = #{userId}]]>	
+		</where>
+	</update>
+	
+	<delete id="remove">
+		<![CDATA[DELETE FROM sys_user WHERE userId = #{userId}]]>
+	</delete>
+	
+	<delete id="batchRemove">
+		<![CDATA[DELETE FROM sys_user WHERE userId IN]]>
+		<foreach item="userId" collection="array" open="(" separator="," close=")">
+			#{userId}
+		</foreach>
+	</delete>
+	
+	<select id="checkUser" resultType="com.zhiyou.wxgame.dto.system.UserDto">
+		<![CDATA[
+			SELECT
+				a.userId,
+				a.username,
+				a.`name`,
+				a.`password`,
+				a.`status`,
+				a.createTime,
+				a.modifiedTime
+			FROM
+				sys_user AS a
+		]]>
+        <where>  
+  		  	<if test="username != null and username != ''"> and a.username = #{username} </if>
+  		  	<if test="password != null and password != ''"> and a.password = #{password} </if>
+  		</where>
+	</select>
+</mapper>

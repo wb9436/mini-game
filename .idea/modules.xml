@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/mini-ddz/mini-ddz.iml" filepath="$PROJECT_DIR$/mini-ddz/mini-ddz.iml" />
+      <module fileurl="file://$PROJECT_DIR$/mini-dto/mini-dto.iml" filepath="$PROJECT_DIR$/mini-dto/mini-dto.iml" />
+      <module fileurl="file://$PROJECT_DIR$/mini-game.iml" filepath="$PROJECT_DIR$/mini-game.iml" />
+      <module fileurl="file://$PROJECT_DIR$/mini-manage/mini-manage.iml" filepath="$PROJECT_DIR$/mini-manage/mini-manage.iml" />
+      <module fileurl="file://$PROJECT_DIR$/mini-util/mini-util.iml" filepath="$PROJECT_DIR$/mini-util/mini-util.iml" />
+    </modules>
+  </component>
+</project>

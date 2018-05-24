@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<hanlers>
+	<handler>
+		<cmd>10000</cmd><handlerClass>com.zhiyou.wxgame.server.handler.KeepliveHandler</handlerClass><desc>心跳</desc>
+	</handler>
+	<handler>
+		<cmd>10001</cmd><handlerClass>com.zhiyou.wxgame.server.handler.TestHandler</handlerClass><desc>测试handler</desc>
+	</handler>
+</hanlers>

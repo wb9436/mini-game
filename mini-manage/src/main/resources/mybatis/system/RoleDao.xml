@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.zhiyou.wxgame.system.dao.RoleDao">
+
+	<select id="get" resultType="com.zhiyou.wxgame.dto.system.RoleDto">
+		<![CDATA[
+			SELECT
+				a.roleId,
+				a.roleName,
+				a.roleSign,
+				a.remark,
+				a.createTime,
+				a.modifiedTime
+			FROM
+				sys_role AS a
+			WHERE
+				a.roleId = #{roleId}
+		]]>
+	</select>
+
+	<select id="list" resultType="com.zhiyou.wxgame.dto.system.RoleDto">
+		<![CDATA[
+			SELECT
+				a.roleId,
+				a.roleName,
+				a.roleSign,
+				a.remark,
+				a.createTime,
+				a.modifiedTime
+			FROM
+				sys_role AS a
+		]]>
+		<where>
+			<if test="roleName != null and roleName != ''"> and a.roleName = #{roleName} </if>
+		</where>
+		<choose>
+			<when test="sort != null and sort.trim() != ''">
+				order by ${sort} ${order}
+			</when>
+			<otherwise>
+				order by a.roleId desc
+			</otherwise>
+		</choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+
+	<select id="count" resultType="int">
+		<![CDATA[
+			SELECT
+				COUNT(*)
+			FROM
+				sys_role AS a
+		]]>
+		<where>
+			<if test="roleName != null and roleName != ''"> and a.roleName = #{roleName} </if>
+		</where>
+	</select>
+
+	<insert id="save" parameterType="com.zhiyou.wxgame.dto.system.RoleDto" useGeneratedKeys="true" keyProperty="roleId">
+		<![CDATA[
+			INSERT INTO sys_role(
+				`roleName`,
+				`roleSign`,
+				`remark`,
+				`createTime`,
+				`modifiedTime`
+			)VALUES(
+				#{roleName},
+				#{roleSign},
+				#{remark},
+				#{createTime},
+				#{modifiedTime}
+			)
+		]]>
+	</insert>
+
+	<update id="update" parameterType="com.zhiyou.wxgame.dto.system.RoleDto">
+		<![CDATA[
+			UPDATE sys_role 
+		]]>
+		<set>
+			<if test="roleName != null">`roleName` = #{roleName}, </if>
+			<if test="roleSign != null">`roleSign` = #{roleSign}, </if>
+			<if test="remark != null">`remark` = #{remark}, </if>
+			<if test="createTime != null">`createTime` = #{createTime}, </if>
+			<if test="modifiedTime != null">`modifiedTime` = #{modifiedTime}</if>
+		</set>
+		<where>
+			<![CDATA[roleId = #{roleId}]]>	
+		</where>
+	</update>
+
+	<delete id="remove">
+		<![CDATA[DELETE FROM sys_role WHERE roleId = #{roleId}]]>
+	</delete>
+
+	<delete id="batchRemove">
+		<![CDATA[DELETE FROM sys_role WHERE roleId IN]]>
+		<foreach item="roleId" collection="array" open="(" separator="," close=")">
+			#{roleId}
+		</foreach>
+	</delete>
+
+</mapper>

@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.zhiyou.wxgame.system.dao.MenuDao">
+
+	<select id="get" resultType="com.zhiyou.wxgame.dto.system.MenuDto">
+		<![CDATA[
+			SELECT
+				a.menuId,
+				a.parentId,
+				a.`name`,
+				a.url,
+				a.perms,
+				a.type,
+				a.icon,
+				a.orderNum,
+				a.createTime,
+				a.modifiedTime
+			FROM
+				sys_menu AS a
+			WHERE
+				a.menuId = #{menuId}
+		]]>
+	</select>
+
+	<select id="list" resultType="com.zhiyou.wxgame.dto.system.MenuDto">
+		<![CDATA[
+			SELECT
+				a.menuId,
+				a.parentId,
+				a.`name`,
+				a.url,
+				a.perms,
+				a.type,
+				a.icon,
+				a.orderNum,
+				a.createTime,
+				a.modifiedTime
+			FROM
+				sys_menu AS a
+		]]>
+        <where>  
+	  		<if test="menuId != null and menuId != ''"> and a.menuId = #{menuId} </if>
+			<if test="parentId != null and parentId != ''"> and a.parentId = #{parentId} </if>
+			<if test="type != null and type != ''"> and a.type = #{type} </if>
+  		</where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+			<otherwise>
+                order by a.menuId desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="count" resultType="int">
+		<![CDATA[
+			SELECT
+				COUNT(*)
+			FROM
+				sys_menu AS a
+		]]>
+		<where>  
+	  		<if test="menuId != null and menuId != ''"> and a.menuId = #{menuId} </if>
+			<if test="parentId != null and parentId != ''"> and a.parentId = #{parentId} </if>
+			<if test="type != null and type != ''"> and a.type = #{type} </if>
+  		</where>
+	</select>
+	 
+	<insert id="save" parameterType="com.zhiyou.wxgame.dto.system.MenuDto" useGeneratedKeys="true" keyProperty="menuId">
+		<![CDATA[
+			INSERT INTO sys_menu(
+				`parentId`,
+				`name`,
+				`url`,
+				`perms`,
+				`type`,
+				`icon`,
+				`orderNum`,
+				`createTime`,
+				`modifiedTime`
+			)VALUES(
+				#{parentId},
+				#{name},
+				#{url},
+				#{perms},
+				#{type},
+				#{icon},
+				#{orderNum},
+				#{createTime},
+				#{modifiedTime}
+			)
+		]]>
+	</insert>
+	 
+	<update id="update" parameterType="com.zhiyou.wxgame.dto.system.MenuDto">
+		<![CDATA[
+			UPDATE sys_menu 
+		]]>
+		<set>
+			<if test="parentId != null">`parentId` = #{parentId}, </if>
+			<if test="name != null">`name` = #{name}, </if>
+			<if test="url != null">`url` = #{url}, </if>
+			<if test="perms != null">`perms` = #{perms}, </if>
+			<if test="type != null">`type` = #{type}, </if>
+			<if test="icon != null">`icon` = #{icon}, </if>
+			<if test="orderNum != null">`orderNum` = #{orderNum}, </if>
+			<if test="createTime != null">`createTime` = #{createTime}, </if>
+			<if test="modifiedTime != null">`modifiedTime` = #{modifiedTime}</if>
+		</set>
+		<where>
+			<![CDATA[menuId = #{menuId}]]>	
+		</where>
+	</update>
+	
+	<delete id="remove">
+		<![CDATA[DELETE FROM sys_menu WHERE menuId = #{menuId}]]>
+	</delete>
+	
+	<delete id="batchRemove">
+		<![CDATA[DELETE FROM sys_menu WHERE menuId IN]]>
+		<foreach item="menuId" collection="array" open="(" separator="," close=")">
+			#{menuId}
+		</foreach>
+	</delete>
+	
+	<select id="listMenuByUserId" resultType="com.zhiyou.wxgame.dto.system.MenuDto">
+		<![CDATA[
+			SELECT
+				a.menuId,
+				a.parentId,
+				a.`name`,
+				a.url,
+				a.perms,
+				a.type,
+				a.icon,
+				a.orderNum,
+				a.createTime,
+				a.modifiedTime
+			FROM
+				sys_menu AS a
+			LEFT JOIN sys_role_menu b ON a.menuId = b.menuId
+			LEFT JOIN sys_user_role c ON c.roleId = b.roleId
+			WHERE
+				c.userId = #{userId}
+			AND a.type IN (0, 1)
+			ORDER BY
+				a.orderNum ASC
+		]]>
+	</select>
+	
+	<select id="childList" resultType="com.zhiyou.wxgame.dto.system.MenuDto">
+		<![CDATA[
+			SELECT
+				a.menuId,
+				a.parentId,
+				a.`name`,
+				a.url,
+				a.perms,
+				a.type,
+				a.icon,
+				a.orderNum,
+				a.createTime,
+				a.modifiedTime
+			FROM
+				sys_menu AS a
+			WHERE
+				a.parentId = #{parentId}
+		]]>
+	</select>
+	
+	<select id="listUserPerms" resultType="String">
+		<![CDATA[
+			SELECT DISTINCT
+				a.perms
+			FROM
+				sys_menu a
+			LEFT JOIN sys_role_menu b ON a.menuId = b.menuId
+			LEFT JOIN sys_user_role c ON c.roleId = b.roleId
+			WHERE
+				c.userId = #{userId}
+		]]>
+	</select>
+	
+</mapper>
